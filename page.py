@@ -21,7 +21,7 @@ class MainPage(BasePage):
             select.select_by_index(2)
             assert select.first_selected_option.text == "Harry Potter"
 
-    def deposit(self, amount) -> None:
+    def deposit(self, amount: str) -> None:
         with allure.step("Check if deposit"):
             self.check_element("Amount to be Deposited :")
             assert "Amount to be Deposited :" in self.driver.page_source
@@ -33,7 +33,7 @@ class MainPage(BasePage):
         with allure.step("Check balance"):
             assert 'Balance : <strong class="ng-binding">{}</strong>'.format(amount) in self.driver.page_source
 
-    def withdrawal(self, amount) -> None:
+    def withdrawal(self, amount: str) -> None:
         with allure.step("Check if withdrawal"):
             self.check_element("Amount to be Withdrawn :")
             assert "Amount to be Withdrawn :" in self.driver.page_source
