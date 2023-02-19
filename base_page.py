@@ -15,10 +15,10 @@ class BasePage(object):
             message=f"Can't find element by locator {locator}",
         )
 
-    def check_element(self, text, time=10) -> any:
+    def check_element_appears(self, text, time=10) -> any:
         return WebDriverWait(self.driver, time).until(
             ec.presence_of_element_located(locator=(By.XPATH, f'//*[text()="{text}"]')),
-            message=f"Can't find elements by {text}",
+            message=f"Can't find element with text {text}",
         )
 
     def get_site(self) -> None:

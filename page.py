@@ -23,7 +23,7 @@ class MainPage(BasePage):
 
     def deposit(self, amount: str) -> None:
         with allure.step("Check if deposit"):
-            self.check_element("Amount to be Deposited :")
+            self.check_element_appears("Amount to be Deposited :")
             assert "Amount to be Deposited :" in self.driver.page_source
         with allure.step("Deposit amount"):
             input_field = self.find_element(locator=PageLocators.INPUT_FIELD)
@@ -35,13 +35,13 @@ class MainPage(BasePage):
 
     def withdrawal(self, amount: str) -> None:
         with allure.step("Check if withdrawal"):
-            self.check_element("Amount to be Withdrawn :")
+            self.check_element_appears("Amount to be Withdrawn :")
             assert "Amount to be Withdrawn :" in self.driver.page_source
         with allure.step("Withdrawal amount"):
             input_field = self.find_element(locator=PageLocators.INPUT_FIELD)
             input_field.send_keys(amount)  # noqa
             input_field.send_keys(Keys.RETURN)  # noqa
-            self.check_element("Transaction successful")
+            self.check_element_appears("Transaction successful")
             assert "Transaction successful" in self.driver.page_source
         with allure.step("Check balance is 0"):
             assert 'Balance : <strong class="ng-binding">0</strong>' in self.driver.page_source
