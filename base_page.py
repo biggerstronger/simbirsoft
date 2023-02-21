@@ -4,9 +4,9 @@ from selenium.webdriver.support import expected_conditions as ec
 
 
 class BasePage(object):
-    def __init__(self, driver):
+    def __init__(self, driver, url: str):
         self.driver = driver
-        self.base_url = "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login"
+        self.base_url = url
 
     def find_element(self, locator, time=200) -> any:
         return WebDriverWait(self.driver, time).until(

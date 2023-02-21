@@ -16,14 +16,14 @@ def setup_firefox():
         }
     )
     locators = PageLocators()
-
-    yield driver, locators
+    url = "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login"
+    yield driver, locators, url
 
     driver.close()
 
 
-def business_logic(driver, locators):
-    page_object = MainPage(driver)
+def business_logic(driver, locators, url):
+    page_object = MainPage(driver, url)
     page_object.get_site()
     page_object.click_button(locator=locators.CUSTOMER_LOGIN_BUTTON)
     page_object.select_customer()
@@ -39,5 +39,5 @@ def business_logic(driver, locators):
 
 @allure.story("Test Firefox")
 def test_firefox(setup_firefox):
-    driver, locators = setup_firefox
-    business_logic(driver, locators)
+    driver, locators, url = setup_firefox
+    business_logic(driver, locators, url)
