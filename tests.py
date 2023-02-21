@@ -1,4 +1,5 @@
 import allure
+import pytest
 
 from selenium import webdriver
 
@@ -6,8 +7,8 @@ from locators import PageLocators
 from page import MainPage
 
 
-@allure.story("Test all cases")
-def test_all():
+@pytest.fixture
+def setup_firefox():
     driver = webdriver.Remote(
         command_executor="http://127.0.0.1:4444/wd/hub",
         desired_capabilities={
@@ -15,6 +16,13 @@ def test_all():
         }
     )
     locators = PageLocators()
+
+    yield driver, locators
+
+    driver.close()
+
+
+def business_logic(driver, locators):
     page_object = MainPage(driver)
     page_object.get_site()
     page_object.click_button(locator=locators.CUSTOMER_LOGIN_BUTTON)
@@ -27,4 +35,9 @@ def test_all():
     page_object.withdrawal(calculated_amount)
     page_object.click_button(locator=locators.TRANSACTION_BUTTON)
     page_object.check_transactions_and_create_csv()
-    page_object.driver.close()
+
+
+@allure.story("Test Firefox")
+def test_firefox(setup_firefox):
+    driver, locators = setup_firefox
+    business_logic(driver, locators)
