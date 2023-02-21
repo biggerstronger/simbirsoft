@@ -34,10 +34,13 @@ def business_logic(driver, locators, url):
     page_object.click_button(locator=locators.WITHDRAWAL_BUTTON)
     page_object.withdrawal(calculated_amount)
     page_object.click_button(locator=locators.TRANSACTION_BUTTON)
-    page_object.check_transactions_and_create_csv()
+    with allure.step("Check balance is 0"):
+        assert 'Balance : <strong class="ng-binding">0</strong>' in page_object.driver.page_source
+    with allure.step("Check transactions"):
+        assert None not in page_object.transactions()
 
 
-@allure.story("Test Firefox")
+@allure.story("Test page with Firefox")
 def test_firefox(setup_firefox):
     driver, locators, url = setup_firefox
     business_logic(driver, locators, url)
