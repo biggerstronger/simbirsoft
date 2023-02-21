@@ -65,39 +65,25 @@ class MainPage(BasePage):
 
     @staticmethod
     def find_fibonacci_number() -> str:
-        day = datetime.datetime.now().day
-        fib_list = [
-            0,
-            1,
-            1,
-            2,
-            3,
-            5,
-            8,
-            13,
-            21,
-            34,
-            55,
-            89,
-            144,
-            233,
-            377,
-            610,
-            987,
-            1597,
-            2584,
-            4181,
-            6765,
-            10946,
-            17711,
-            28657,
-            46368,
-            75025,
-            121393,
-            196418,
-            317811,
-            514229,
-            832040,
-            1346269,
-        ]
-        return str(fib_list[day])
+        """
+                Этот пункт можно посчитать и обычной рекурсией, но в таком случае в метод придется передавать day,
+                вместо day + 1, что несколько противоречит условиям ТЗ
+
+                Классический рекурсивный алгоритм:
+
+                def fibonacci(day):
+                    if day == 0:
+                        return 0
+                    elif day == 1 or day == 2:
+                        return 1
+                    else:
+                        return fibonacci(day - 1) + fibonacci(day - 2)
+        """
+        day = datetime.datetime.now().day + 1
+        if day == 1:
+            sequence = [0]
+        else:
+            sequence = [0, 1]
+            for i in range(1, day - 1):
+                sequence.append(sequence[i - 1] + sequence[i])
+        return str(sequence[-1])
