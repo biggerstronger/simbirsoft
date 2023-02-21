@@ -2,9 +2,8 @@ import allure
 import pytest
 
 from selenium import webdriver
-
-from locators import PageLocators
-from page import MainPage
+from src.page_locators import PageLocators
+from src.main_page import MainPage
 
 
 @pytest.fixture
@@ -17,6 +16,7 @@ def setup_firefox():
     )
     locators = PageLocators()
     url = "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/login"
+
     yield driver, locators, url
 
     driver.close()
@@ -35,7 +35,10 @@ def business_logic(driver, locators, url):
     page_object.withdrawal(calculated_amount)
     page_object.click_button(locator=locators.TRANSACTION_BUTTON)
     with allure.step("Check balance is 0"):
-        assert 'Balance : <strong class="ng-binding">0</strong>' in page_object.driver.page_source
+        assert (
+            'Balance : <strong class="ng-binding">0</strong>'
+            in page_object.driver.page_source
+        )
     with allure.step("Check transactions"):
         assert None not in page_object.transactions()
 
