@@ -15,48 +15,35 @@ class MainPage(BasePage):
         self.find_element(locator=locator).click()
 
     def select_customer(self) -> None:
-        with allure.step("You are the chosen one, Harry"):
-            select_element = self.find_element(locator=PageLocators.CUSTOMER_SELECT)
-            select = Select(select_element)
-            select.select_by_index(2)
-            assert select.first_selected_option.text == "Harry Potter"
+        select_element = self.find_element(locator=PageLocators.CUSTOMER_SELECT)
+        select = Select(select_element)
+        select.select_by_index(2)
 
     def deposit(self, amount: str) -> None:
-        with allure.step("Check if deposit"):
-            self.check_element_appears("Amount to be Deposited :")
-            assert "Amount to be Deposited :" in self.driver.page_source
-        with allure.step("Deposit amount"):
-            input_field = self.find_element(locator=PageLocators.INPUT_FIELD)
-            input_field.send_keys(amount)  # noqa
-            input_field.send_keys(Keys.RETURN)  # noqa
-            assert "Deposit Successful" in self.driver.page_source
-        with allure.step("Check balance"):
-            assert 'Balance : <strong class="ng-binding">{}</strong>'.format(amount) in self.driver.page_source
+        self.check_element_appears("Amount to be Deposited :")
+        input_field = self.find_element(locator=PageLocators.INPUT_FIELD)
+        input_field.send_keys(amount)  # noqa
+        input_field.send_keys(Keys.RETURN)  # noqa
 
     def withdrawal(self, amount: str) -> None:
-        with allure.step("Check if withdrawal"):
-            self.check_element_appears("Amount to be Withdrawn :")
-            assert "Amount to be Withdrawn :" in self.driver.page_source
-        with allure.step("Withdrawal amount"):
-            input_field = self.find_element(locator=PageLocators.INPUT_FIELD)
-            input_field.send_keys(amount)  # noqa
-            input_field.send_keys(Keys.RETURN)  # noqa
-            self.check_element_appears("Transaction successful")
-            assert "Transaction successful" in self.driver.page_source
-        with allure.step("Check balance is 0"):
-            assert 'Balance : <strong class="ng-binding">0</strong>' in self.driver.page_source
+        self.check_element_appears("Amount to be Withdrawn :")
+        input_field = self.find_element(locator=PageLocators.INPUT_FIELD)
+        input_field.send_keys(amount)  # noqa
+        input_field.send_keys(Keys.RETURN)  # noqa
+        self.check_element_appears("Transaction successful")
 
-    def check_transactions_and_create_csv(self) -> any:
-        with allure.step("Check first transaction"):
-            first = self.find_element(locator=PageLocators.TRANSACTION_ONE)
-            assert first
-        with allure.step("Check second transaction"):
-            second = self.find_element(locator=PageLocators.TRANSACTION_TWO)
-            assert second
-        first = first.text.replace(",", "").split(" ")  # noqa
-        second = second.text.replace(",", "").split(" ")  # noqa
-        first_transaction = [" ".join([first[1], first[0], first[2]]), first[3], first[5], first[6]]
-        second_transaction = [" ".join([second[1], second[0], second[2]]), second[3], second[5], second[6]]
+    def transactions(self) -> any:
+        first = self.find_element(locator=PageLocators.TRANSACTION_ONE)
+        second = self.find_element(locator=PageLocators.TRANSACTION_TWO)
+        self._create_csv(first, second)
+        return first, second
+
+    @staticmethod
+    def _create_csv(first_t, second_t):
+        first_t = first_t.text.replace(",", "").split(" ")  # noqa
+        second_t = second_t.text.replace(",", "").split(" ")  # noqa
+        first_transaction = [" ".join([first_t[1], first_t[0], first_t[2]]), first_t[3], first_t[5], first_t[6]]
+        second_transaction = [" ".join([second_t[1], second_t[0], second_t[2]]), second_t[3], second_t[5], second_t[6]]
         with open('transactions.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(first_transaction)
